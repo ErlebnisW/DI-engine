@@ -5,6 +5,7 @@ from .collector import inferencer, rolloutor, TransitionList
 from .evaluator import interaction_evaluator
 from .termination_checker import termination_checker
 from .pace_controller import pace_controller
+from .exchanger import context_exchanger, model_exchanger
 
 # algorithm
 from .explorer import eps_greedy_handler, eps_greedy_masker

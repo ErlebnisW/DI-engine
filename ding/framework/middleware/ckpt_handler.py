@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class CkptSaver:
 
-    def __init__(self, cfg: EasyDict, policy: Policy, train_freq: Optional[int] = None):
+    def __init__(self, cfg: EasyDict, policy: Policy, train_freq: Optional[int] = None, save_finish: bool = True):
         self.policy = policy
         self.train_freq = train_freq
         self.prefix = '{}/ckpt'.format(cfg.exp_name)
@@ -21,6 +21,7 @@ class CkptSaver:
             os.mkdir(self.prefix)
         self.last_save_iter = 0
         self.max_eval_value = -np.inf
+        self.save_finish = save_finish
 
     def __call__(self, ctx: Union["OnlineRLContext", "OfflineRLContext"]) -> None:
         # train enough iteration
@@ -31,10 +32,10 @@ class CkptSaver:
             self.last_save_iter = ctx.train_iter
 
         # best eval reward so far
-        if ctx.eval_value > self.max_eval_value:
+        if ctx.eval_value is not None and ctx.eval_value > self.max_eval_value:
             save_file("{}/eval.pth.tar".format(self.prefix), self.policy.learn_mode.state_dict())
             self.max_eval_value = ctx.eval_value
 
         # finish
-        if task.finish:
+        if task.finish and self.save_finish:
             save_file("{}/final.pth.tar".format(self.prefix), self.policy.learn_mode.state_dict())

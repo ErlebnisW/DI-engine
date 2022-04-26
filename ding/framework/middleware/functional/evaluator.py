@@ -150,7 +150,7 @@ def interaction_evaluator(cfg: EasyDict, policy: Policy, env: BaseEnvManager) ->
 
     def _evaluate(ctx: "OnlineRLContext"):
         # evaluation will be executed if the task begins or enough train_iter after last evaluation
-        if ctx.last_eval_iter != -1 and \
+        if ctx.last_eval_iter is not None and \
            (ctx.train_iter - ctx.last_eval_iter < cfg.policy.eval.evaluator.eval_freq):
             return
 
@@ -190,7 +190,7 @@ def metric_evaluator(cfg: EasyDict, policy: Policy, dataset: Dataset, metric: IM
 
     def _evaluate(ctx: "Context"):
         # evaluation will be executed if the task begins or enough train_iter after last evaluation
-        if ctx.last_eval_iter != -1 and \
+        if ctx.last_eval_iter is not None and \
            (ctx.train_iter - ctx.last_eval_iter < cfg.policy.eval.evaluator.eval_freq):
             return
 
